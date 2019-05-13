@@ -94,6 +94,19 @@ template <typename T, int numchan=1>
 	std::vector<T> getAudiovec(){
 		return audiovec;
 	}
+	int getbitnum(){
+		return bitnum;
+	}
+	
+	int getfs(){
+		return fs;
+	}
+	int getchannelnum(){
+		return channelnum;
+	}
+	int getsamplenum(){
+		return samplenum;
+	}
 	
 	void load(std::string file){
 		std::ifstream inputfile;
@@ -446,6 +459,19 @@ template <typename T>
 	}
 	int getsecond(int pos){
 		return audiovec[pos].second;
+	}
+		int getbitnum(){
+		return bitnum;
+	}
+	
+	int getfs(){
+		return fs;
+	}
+	int getchannelnum(){
+		return channelnum;
+	}
+	int getsamplenum(){
+		return samplenum;
 	}
 	void load(std::string file){
 		std::cout <<"Loading" <<std::endl;

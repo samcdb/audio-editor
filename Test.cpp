@@ -19,6 +19,7 @@ TEST_CASE("Testing Overloaded operators ", ""){
     Audio<int16_t, 2> test8(16,1,3,{51,67,89});
 	Audio<int16_t, 2> test9(16,1,1,{51});
 	Audio<int16_t, 2> test10(16,1,1,{52});
+	Audio<int8_t,1>	  test11(8,1,1,{3});
 	
 	SECTION("Add operation single channel and + overload"){
        Audio<int8_t, 1> addtest = test1 + test7;
@@ -175,26 +176,177 @@ SECTION("Radd operation single channel"){
     }	
 	
 	
-	//SPECIAL MEMBER FUNCTIONS
+	//SPECIAL MEMBER FUNCTIONS mono
 	
 	SECTION("copy constructor 8 bit mono"){
 		
-       Audio<int8_t, 1> revtest1 = test9;
+       Audio<int8_t, 1> copytest = test11;
 	    
 		
 	   
         
-        REQUIRE(revtest3.getfirst(0)==);
-		REQUIRE(revtest3.getsecond(0)==revtest1.getsecond(2));
-		REQUIRE(revtest3.getfirst(1)==revtest1.getfirst(1));
-		REQUIRE(revtest3.getsecond(1)==revtest1.getsecond(1));
-		REQUIRE(revtest3.getfirst(2)==revtest1.getfirst(0));
-		REQUIRE(revtest3.getsecond(2)==revtest1.getsecond(0));
+        REQUIRE(copytest.getbitnum()==test11.getbitnum());
+		REQUIRE(copytest.getchannelnum()==test11.getchannelnum());
+		REQUIRE(copytest.getfs()==test11.getfs());
+		REQUIRE(copytest.getAudiovec()[0]==test11.getAudiovec()[0]);
+		
 	
-        
 		
        
     }	
+	
+	
+	
+	SECTION("copy assignment 8 bit mono"){
+		
+       Audio<int8_t, 1> copyassign1 = test11;
+	   Audio<int8_t, 1> copyassign2 = test5;
+	    
+		copyassign2 = copyassign1;
+		
+	   
+        
+        REQUIRE(copyassign1.getbitnum()==copyassign2.getbitnum());
+		REQUIRE(copyassign1.getchannelnum()==copyassign2.getchannelnum());
+		REQUIRE(copyassign1.getfs()==copyassign2.getfs());
+		REQUIRE(copyassign1.getAudiovec()[0]==copyassign2.getAudiovec()[0]);
+		
+       
+    }
+	
+	SECTION("move assignment operator 8 bit mono"){
+		
+       Audio<int8_t, 1> movecon1 = test11;
+	   Audio<int8_t, 1> movecon2 = test5;
+	    
+		movecon1 = std::move(movecon2);
+		
+	   
+        
+        REQUIRE(movecon1.getbitnum()==8);
+		
+		REQUIRE(movecon1.getfs()==1);
+		REQUIRE(movecon1.getAudiovec()[0]==3);
+	
+		
+		REQUIRE(movecon2.getbitnum()==-1);
+		REQUIRE(movecon2.getchannelnum()==-1);
+		REQUIRE(movecon2.getfs()==-1);
+		
+		
+		
+       
+    }
+	
+	SECTION("move constructor 8 bit mono"){
+		
+       
+	   Audio<int8_t, 1> movecon2 = test5;
+	    
+		Audio<int8_t, 1>movecon1 = std::move(movecon2);
+		
+	   
+        
+        REQUIRE(movecon1.getbitnum()==8);
+		
+		REQUIRE(movecon1.getfs()==1);
+		
+	
+		
+		REQUIRE(movecon2.getbitnum()==-1);
+		REQUIRE(movecon2.getchannelnum()==-1);
+		REQUIRE(movecon2.getfs()==-1);
+		
+       
+    }
+	
+	//SPECIAL MEMBER FUNCTIONS stereo
+	
+	SECTION("copy constructor 16 bit stereo"){
+		
+       Audio<int16_t, 2> copytest = test10;
+	    
+		
+	   
+        
+        REQUIRE(copytest.getbitnum()==test10.getbitnum());
+		REQUIRE(copytest.getchannelnum()==test10.getchannelnum());
+		REQUIRE(copytest.getfs()==test10.getfs());
+		REQUIRE(copytest.getfirst(0)==test10.getfirst(0));
+		REQUIRE(copytest.getsecond(0)==test10.getsecond(0));
+		
+	
+		
+       
+    }	
+	
+	
+	
+	SECTION("copy assignment operator 16 bit stereo"){
+		
+       Audio<int16_t, 2> copyassign1 = test10;
+	   Audio<int16_t, 2> copyassign2 = test3;
+	    
+		copyassign2 = copyassign1;
+		
+	   
+        
+        REQUIRE(copyassign1.getbitnum()==copyassign2.getbitnum());
+		REQUIRE(copyassign1.getchannelnum()==copyassign2.getchannelnum());
+		REQUIRE(copyassign1.getfs()==copyassign2.getfs());
+		
+		REQUIRE(copyassign1.getfirst(0)==copyassign2.getfirst(0));
+		REQUIRE(copyassign1.getsecond(0)==copyassign2.getsecond(0));
+		
+       
+    }
+	
+	SECTION("move assignment operator 16 bit stereo"){
+		
+       Audio<int16_t, 2> movecon1 = test3;
+	   Audio<int16_t, 2> movecon2 = test10;
+	    
+		movecon1 = std::move(movecon2);
+		
+	   
+        
+        REQUIRE(movecon1.getbitnum()==16);
+		
+		REQUIRE(movecon1.getfs()==1);
+		REQUIRE(movecon1.getfirst(0)==52);
+		REQUIRE(movecon1.getsecond(0)==52);
+	
+		
+		REQUIRE(movecon2.getbitnum()==-1);
+		REQUIRE(movecon2.getchannelnum()==-1);
+		REQUIRE(movecon2.getfs()==-1);
+		
+		
+		
+       
+    }
+	
+	SECTION("move constructor 16 bit stereo"){
+		
+       
+	   Audio<int16_t, 2> movecon2 = test10;
+	    
+		Audio<int16_t, 2>movecon1 = std::move(movecon2);
+		
+	   
+        
+        REQUIRE(movecon1.getbitnum()==16);
+		
+		REQUIRE(movecon1.getfs()==1);
+		
+	
+		
+		REQUIRE(movecon2.getbitnum()==-1);
+		REQUIRE(movecon2.getchannelnum()==-1);
+		REQUIRE(movecon2.getfs()==-1);
+		
+       
+    }
 	
 	
 	
