@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 				audio1.load(string(argv[10]));
 				audio2.load(string(argv[11]));
 				//add files together
-			//	DBRSAM003::Audio<int16_t,1> sum = audio1+audio2;
+				//DBRSAM003::Audio<int16_t,1> sum = audio1+audio2;
 				//save output
 				audio1.save(string(argv[8]));
 			}

@@ -34,6 +34,18 @@ template <typename T, int numchan=1>
 	Audio();  //default constructor
 	Audio(T bitnumber, int samplef) : bitnum(bitnumber), fs(samplef), channelnum(numchan){}
 	
+	// unit test constructor
+	Audio(int countbit, int samplefreq,  int sampnum,std::initializer_list<unsigned char> testlist) : samplenum(sampnum), bitnum(countbit), fs(samplefreq) {
+		
+		audiovec.resize(sampnum);
+		
+		auto listit = testlist.begin();
+		for (int h = 0; h < samplenum; h++)
+		{
+			audiovec[h] = *listit;
+			listit++;
+		}
+	}
 	
 	//copy constructor
 	Audio(const Audio & rhs) : bitnum(rhs.bitnum), fs(rhs.fs), channelnum(rhs.channelnum), samplenum(rhs.samplenum){
@@ -89,13 +101,13 @@ template <typename T, int numchan=1>
 		inputfile.open(file, std::ios::binary);
 				
 		//finding size of file
-		/*
+		
 		inputfile.seekg(0,inputfile.end); //go to end of stream
 		 audiosize = (int)(inputfile.tellg()); // get size
 		inputfile.seekg(0, inputfile.beg);  // go back to beginning
 		std::cout << audiosize<< std::endl;
 		//determining number of samples
-		samplenum = (audiosize/(sizeof(T)*1) );
+		samplenum = (audiosize/(sizeof(T)*1) )*bitnum/8;
 		std::cout << "sample num " <<samplenum<< std::endl;
 		
 		
@@ -106,35 +118,35 @@ template <typename T, int numchan=1>
 		char * temp_array = new char[samplenum];
 		inputfile.read(temp_array, samplenum);
 		audiovec.resize(samplenum);
-		*/
 		
 		
+		/*
 		inputfile.seekg(0, inputfile.end);
 		std::streampos fileSize = inputfile.tellg();
 
-		samplenum = fileSize / (sizeof(T));
+		samplenum = (fileSize / (sizeof(T)))*bitnum/8;
 		audiovec.resize(samplenum);
 		int fLength = samplenum / (float)fs;
 
 		inputfile.seekg(0, inputfile.beg);
 		std::cout << "sample num " <<samplenum<< std::endl;
 		inputfile.read((char *)& audiovec[0], samplenum);
+		*/
 		
-		/*
 		for(int g = 0; g < samplenum; g++)
 		{
 			audiovec[g] = (T)(temp_array[g]);
 			}
 		delete temp_array;
-		std::cout << "last in array " << audiovec[audiovec.size()-1] <<std::endl;
+		
 		inputfile.close();
-				*/
+				
 		
 	}
 	void save(std::string file){
 		std::ofstream outputfile(file, std::ios::binary);
 				//creating temporary array
-				/*
+				
 		char * save_arr = new char[samplenum];
 		int counter = 0;
 		for(int k = 0; k < samplenum; ++k)
@@ -142,20 +154,18 @@ template <typename T, int numchan=1>
 			save_arr[k] = (char)audiovec[k];
 			counter++;
 		}
-		std::cout << "last in array " << save_arr[audiovec.size()-1] <<std::endl;
-
-		std::cout << "save length " << counter <<std::endl;
+		
 		//write temporary array contents to output file
 		outputfile.write(save_arr, samplenum);
 		delete save_arr;
-		*/
 		
 		
+		/*
 		std::cout << "vec sizeeeee " << audiovec.size() <<std::endl;
 
 		outputfile.write((char *)& audiovec[0], audiovec.size());
 		outputfile.flush();
-		
+		*/
 		outputfile.close();
 		}
 		
@@ -182,9 +192,7 @@ template <typename T, int numchan=1>
 			++beg1; ++beg2;
 			++counter;
 		}
-		std::cout << "vec size " <<answer.audiovec.size() << std::endl;
-		std::cout << "count size " <<counter << std::endl;
-		std::cout << "last two vector elements " <<answer.audiovec[audiovec.size()-30] << " " <<answer.audiovec[audiovec.size()-10] << std::endl;
+	
 		
 		
 		
@@ -379,6 +387,20 @@ template <typename T>
 		
 	}
 	
+	// unit test constructor
+	Audio(int countbit, int sampfreq,  int sampnum,std::initializer_list<unsigned char> testlist) : samplenum(sampnum), bitnum(countbit), fs(sampfreq) {
+		
+		audiovec.resize(sampnum);
+		
+		auto listit = testlist.begin();
+		for (int h = 0; h < samplenum; h++)
+		{
+			audiovec[h].first = *listit;
+			audiovec[h].second = *listit;
+			listit++;
+		}
+	}
+	
 	//copy assignment
 	Audio operator=(const Audio & rhs)
 		{
@@ -419,7 +441,12 @@ template <typename T>
 	std::vector<T> getAudiovec(){
 		return audiovec;
 	}
-	
+	int getfirst(int pos){
+		return audiovec[pos].first;
+	}
+	int getsecond(int pos){
+		return audiovec[pos].second;
+	}
 	void load(std::string file){
 		std::cout <<"Loading" <<std::endl;
 		std::ifstream inputfile;
@@ -458,7 +485,7 @@ template <typename T>
 		char * save_arr = new char[samplenum*2];
 		int count = 0;
 		int k = 0;
-		std::cout << "hi" << std::endl;
+		
 		while (k<samplenum)
 		{
 			
@@ -527,9 +554,7 @@ template <typename T>
 		auto beg1 = answer.audiovec.begin(), end1 = answer.audiovec.end();    
 		auto beg2 = newaudiovec.begin(), end2 = newaudiovec.end();
 		auto cutstart = beg1+startsmpl+1, cutend = beg1+endsmpl;
-		std::cout<<"new "<<newaudiovec.size()<<std::endl;
-		std::cout <<"old " <<this->audiovec.size() <<std::endl;
-		std::cout<<"start " <<startsmpl << " end " << endsmpl<<std::endl;
+		
 		while(beg1 != cutstart){  //go from beginning to start of cut
 			*beg2 = *beg1;
 			
@@ -581,7 +606,7 @@ template <typename T>
 		std::vector<std::pair<T,T>>  othraddaudiovec;
 		ansraddaudiovec.resize((rangepair1.second - rangepair1.first)*fs*2);
 		othraddaudiovec.resize((rangepair2.second - rangepair2.first)*fs*2);
-		std::cout << other.audiovec.size()<< std::endl;
+		
 		std::copy ( answer.audiovec.begin()+rangepair1.first*fs*2, answer.audiovec.begin()+rangepair1.second*fs*2, ansraddaudiovec.begin() );   // copy range into new vector
 		std::cout << "end of radd" << std::endl;
 		std::copy ( oth.audiovec.begin()+rangepair2.first*fs*2, oth.audiovec.begin()+rangepair2.second*fs*2, othraddaudiovec.begin() );	//copy range into new vector
