@@ -126,7 +126,7 @@ template <typename T, int numchan=1>
 
 
 
-		
+
 		char * temp_array = new char[samplenum];
 		inputfile.read(temp_array, samplenum);
 		audiovec.resize(samplenum);
@@ -144,7 +144,7 @@ template <typename T, int numchan=1>
 	}
 	void save(std::string file){
 		std::string name = file + "_" + std::to_string(fs) +"_"+std::to_string(bitnum) +"bit_mono.raw";
-   
+    
 		std::ofstream outputfile(name, std::ios::binary);
 				//creating temporary array
 
@@ -667,7 +667,7 @@ template <typename T>
 
 		++beg1;
 		}
-		std::cout <<"check " << volchange.audiovec[2].first <<" " << volchange.audiovec[2].second<<std::endl;
+		
 		return volchange;
 
 

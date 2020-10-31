@@ -1,0 +1,56 @@
+#### README ####
+
+To compile the program, type make
+
+To run the unit tests, type make test     (wait for a few seconds)
+
+####operations####
+
+To add, type:
+
+./samp -r 44100 -b 16 -c 2 -o out -add beez18sec_44100_signed_16bit_stereo.raw countdown40sec_44100_signed_16bit_stereo.raw
+
+play -r 44100 -e signed -b 16 -c 2 out_44100_16bit_stereo.raw            <to play>
+
+To cut a segment out of a file and play what is left over, type:
+
+./samp -r 44100 -b 16 -c 2 -0 out -cut 1 8 beez18sec_44100_signed_16bit_stereo.raw 
+
+play -r 44100 -e signed -b 16 -c 2 out_44100_16bit_stereo.raw            <to play>
+
+To perform a ranged add, type:
+
+./samp -r 44100 -b 16 -c 2 -0 out -radd 2 5 5 8 beez18sec_44100_signed_16bit_stereo.raw countdown40sec_44100_signed_16bit_stereo.raw
+
+play -r 44100 -e signed -b 16 -c 2 out_44100_16bit_stereo.raw            <to play>
+
+To perform a concatenation, type:
+
+./samp -r 44100 -b 8 -c 1 -o out -cat beez18sec_44100_signed_8bit_mono.raw countdown40sec_44100_signed_8bit_mono.raw
+
+play -r 44100 -e signed -b 8 -c 1 out_44100_8bit_mono.raw            <to play>
+
+To perform a volume change, type:
+
+./samp -r 44100 -b 16 -c 2 -o out -v 5.5 4.5 beez18sec_44100_signed_16bit_stereo.raw
+
+play -r 44100 -e signed -b 16 -c 2 out_44100_16bit_stereo.raw            <to play>
+
+To perform a reversal, type:
+
+./samp -r 44100 -b 8 -c 1 -o out -rev countdown40sec_44100_signed_8bit_mono.raw
+
+play -r 44100 -e signed -b 8 -c 1 out_44100_8bit_mono.raw            <to play>
+
+To find the rms of an audio file, type:
+
+./samp -r 44100 -b 8 -c 2 -o out -rms beez18sec_44100_signed_8bit_stereo.raw
+
+
+
+
+
+
+
+
+
